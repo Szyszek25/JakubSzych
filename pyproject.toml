@@ -1,0 +1,16 @@
+[tool.pyright]
+include = ["AIWSLUZBIE", "gqpa_core"]
+exclude = ["**/__pycache__", "**/venv", "**/venv_gqpa", "**/.venv"]
+reportMissingImports = "warning"
+reportMissingTypeStubs = false
+pythonVersion = "3.9"
+typeCheckingMode = "basic"
+
+[tool.basedpyright]
+include = ["AIWSLUZBIE", "gqpa_core"]
+exclude = ["**/__pycache__", "**/venv", "**/venv_gqpa", "**/.venv"]
+reportMissingImports = "warning"
+reportMissingTypeStubs = false
+pythonVersion = "3.9"
+typeCheckingMode = "basic"
+

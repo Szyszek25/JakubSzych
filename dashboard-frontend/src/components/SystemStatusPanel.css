@@ -1,0 +1,84 @@
+.status-panel {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+}
+
+.status-panel h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 1rem;
+}
+
+.status-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.status-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.status-item.status-success {
+  background: #f0fdf4;
+  border-color: #86efac;
+}
+
+.status-item.status-error {
+  background: #fef2f2;
+  border-color: #fca5a5;
+}
+
+.status-item.status-warning {
+  background: #fffbeb;
+  border-color: #fde047;
+}
+
+.status-icon {
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+.status-item.status-success .status-icon {
+  color: #059669;
+}
+
+.status-item.status-error .status-icon {
+  color: #dc2626;
+}
+
+.status-item.status-warning .status-icon {
+  color: #d97706;
+}
+
+.status-content {
+  flex: 1;
+}
+
+.status-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 0.25rem;
+}
+
+.status-value {
+  font-size: 0.75rem;
+  color: var(--text-light);
+  margin-bottom: 0.125rem;
+}
+
+.status-details {
+  font-size: 0.7rem;
+  color: var(--text-light);
+  font-style: italic;
+}
+

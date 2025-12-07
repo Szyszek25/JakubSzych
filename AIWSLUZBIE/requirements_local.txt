@@ -1,0 +1,37 @@
+# Requirements dla lokalnych modeli (Open Source)
+# HackNation 2024 - Preferowane rozwiązania open-source
+
+# Podstawowe biblioteki
+pandas>=2.1.0
+numpy>=1.24.0
+
+# ============================================================================
+# OPCJA 1: OLLAMA (NAJŁATWIEJSZE - ZALECANE)
+# ============================================================================
+# Ollama to narzędzie do uruchamiania lokalnych modeli LLM
+# Instalacja: https://ollama.ai/download
+# 
+# Po instalacji Ollama, uruchom:
+#   ollama serve
+#   ollama pull llama3.2
+#
+# Wymagane tylko dla komunikacji z Ollama:
+requests>=2.31.0
+
+# ============================================================================
+# OPCJA 2: HUGGING FACE TRANSFORMERS (ZAawansowane)
+# ============================================================================
+# Wymaga więcej zasobów, ale daje pełną kontrolę
+# transformers>=4.35.0
+# torch>=2.0.0
+# accelerate>=0.24.0
+# sentencepiece>=0.1.99
+
+# ============================================================================
+# OPCJA 3: API (Fallback - jeśli lokalne modele nie działają)
+# ============================================================================
+# google-genai>=1.53.0  # Opcjonalne - tylko jeśli potrzebujesz API
+
+# Inne opcjonalne
+python-dotenv>=1.0.0
+

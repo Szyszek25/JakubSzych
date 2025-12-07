@@ -1,0 +1,92 @@
+GQPA DIAMOND - Generic Quantum-Phenomenological Architecture
+Cognitive AI Framework
+
+═══════════════════════════════════════════════════════════════════════════
+
+COPYRIGHT NOTICE
+
+Copyright © 2024-2025 Jakub Szych & Michał Wojtków
+All rights reserved.
+
+═══════════════════════════════════════════════════════════════════════════
+
+LICENSE TERMS
+
+This software and associated documentation files (the "Software") are 
+the joint work of Jakub Szych and Michał Wojtków (the "Authors").
+
+Due to joint authorship, this Software is protected under Polish 
+Copyright Law (Ustawa z dnia 4 lutego 1994 r. o prawie autorskim 
+i prawach pokrewnych, Dz.U. 2021 poz. 1062).
+
+═══════════════════════════════════════════════════════════════════════════
+
+BACKGROUND INTELLECTUAL PROPERTY (Background IP)
+
+This Software is classified as "Background IP" and:
+
+1. REMAINS THE PROPERTY OF THE AUTHORS
+   - All copyrights and intellectual property rights remain with the Authors
+   - No transfer of rights is possible without consent of ALL Authors
+
+2. CANNOT BE TRANSFERRED IN HACKATHON AGREEMENTS
+   - Transfer of rights requires signature of ALL Authors
+   - Partial transfer is legally impossible for joint works
+
+3. CAN BE USED AS EXTERNAL LIBRARY
+   - Can be integrated into hackathon projects
+   - Can be demonstrated and presented
+   - Cannot be modified without Authors' consent
+   - Cannot be commercially exploited without Authors' consent
+
+═══════════════════════════════════════════════════════════════════════════
+
+PERMITTED USES
+
+✅ Integration into hackathon projects (as Background IP)
+✅ Demonstration and presentation
+✅ Educational and research purposes
+✅ Non-commercial use in projects
+
+❌ Transfer of copyright or intellectual property rights
+❌ Modification of core GQPA without Authors' consent
+❌ Commercial use without Authors' written permission
+❌ Removal of copyright notices
+
+═══════════════════════════════════════════════════════════════════════════
+
+COMPONENTS COVERED BY THIS LICENSE
+
+This license covers all GQPA components including but not limited to:
+
+- HAMA2 Cognitive Core (gqpa_part2.py)
+- Cognitive Modules (gqpa_part3.py, gqpa_part4.py)
+- Emergent Cognitive Integrator (gqpa_part5.py)
+- Deployment System (gqpa_deploy.py)
+- All related documentation and examples
+
+═══════════════════════════════════════════════════════════════════════════
+
+CONTACT
+
+For licensing inquiries or permissions:
+
+Authors:
+- Jakub Szych
+- Michał Wojtków
+
+═══════════════════════════════════════════════════════════════════════════
+
+LEGAL BASIS
+
+This license is based on:
+- Polish Copyright Law (Art. 9 - Joint Works)
+- EU Copyright Directive
+- International Copyright Treaties
+
+═══════════════════════════════════════════════════════════════════════════
+
+Version: 1.0
+Date: 2024
+Status: Active
+

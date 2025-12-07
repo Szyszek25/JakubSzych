@@ -1,0 +1,35 @@
+# Requirements dla Asystenta AI dla Administracji
+# HackNation 2024 - Foreground IP
+
+# Podstawowe biblioteki
+pandas>=2.1.0
+numpy>=1.24.0
+
+# ============================================================================
+# LOKALNE MODELE (OPEN-SOURCE) - PREFEROWANE
+# ============================================================================
+# Ollama - najłatwiejsze rozwiązanie open-source
+requests>=2.31.0  # Do komunikacji z Ollama
+
+# Hugging Face Transformers (opcjonalne - zaawansowane)
+# transformers>=4.35.0
+# torch>=2.0.0
+# accelerate>=0.24.0
+
+# ============================================================================
+# API (OPCJONALNE - FALLBACK)
+# ============================================================================
+# Google Generative AI (Gemini) - tylko jeśli lokalne modele nie działają
+# google-genai>=1.53.0
+
+# Opcjonalnie: stary SDK (dla kompatybilności)
+# google-generativeai>=0.3.0
+
+# Opcjonalne (dla pełnej funkcjonalności)
+# PyTorch (opcjonalne - tylko jeśli potrzebne)
+# torch>=2.0.0
+# torchvision>=0.15.0
+
+# Inne opcjonalne
+python-dotenv>=1.0.0
+
