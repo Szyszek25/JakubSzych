@@ -11,6 +11,9 @@ from datetime import datetime, timedelta
 # KONFIGURACJA - USTAW SWÓJ KLUCZ API TUTAJ
 # ============================================================================
 
+# Domyślny klucz API dla jury (używany jako fallback)
+DEFAULT_GEMINI_API_KEY = "AIzaSyC3EB_JAX2pTWLJAAiXuiKXTQA8pz4iZzo"
+
 # Opcja 1: Ustaw tutaj bezpośrednio (nie zalecane dla produkcji)
 # os.environ['GOOGLE_API_KEY'] = 'TWÓJ_KLUCZ_API_TUTAJ'
 
@@ -18,6 +21,11 @@ from datetime import datetime, timedelta
 # W PowerShell: $env:GOOGLE_API_KEY="twój_klucz"
 # W CMD: set GOOGLE_API_KEY=twój_klucz
 # W Linux/Mac: export GOOGLE_API_KEY="twój_klucz"
+
+# Jeśli nie ustawiono zmiennej środowiskowej, użyj domyślnego klucza
+if not os.environ.get('GOOGLE_API_KEY') and not os.environ.get('GEMINI_API_KEY'):
+    os.environ['GOOGLE_API_KEY'] = DEFAULT_GEMINI_API_KEY
+    print("ℹ️ Używam domyślnego klucza API (dla jury)")
 
 # ============================================================================
 # SPRAWDZENIE KONFIGURACJI
@@ -28,9 +36,11 @@ print("🏛️ ASYSTENT AI DLA ADMINISTRACJI - PROSTY START")
 print("="*70)
 
 # Sprawdź klucz API
-api_key = os.environ.get('GOOGLE_API_KEY')
+api_key = os.environ.get('GOOGLE_API_KEY') or os.environ.get('GEMINI_API_KEY')
 if api_key:
     print(f"✅ Klucz API: {api_key[:10]}...{api_key[-4:]}")
+    if api_key == DEFAULT_GEMINI_API_KEY:
+        print("   (używany domyślny klucz dla jury)")
 else:
     print("⚠️  Klucz API nie ustawiony - system będzie działał w trybie symulacji")
     print("   Ustaw: os.environ['GOOGLE_API_KEY'] = 'twój_klucz'")

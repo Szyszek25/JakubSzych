@@ -4,7 +4,7 @@ Asystent AI dla Administracji - Przykłady praktyczne
 """
 
 from asystent_ai_gqpa_integrated import (
-    GQPAAdministrativeAssistant,
+    HAMAAdministrativeAssistant,
     AdministrativeCase,
     GeminiCognitiveAdapter,
     create_demo_assistant,

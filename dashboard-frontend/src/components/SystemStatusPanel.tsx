@@ -24,11 +24,11 @@ export default function SystemStatusPanel({ status }: SystemStatusPanelProps) {
       details: status.gqpa.info ? `${status.gqpa.info.name} v${status.gqpa.info.version}` : null
     },
     {
-      label: 'Ollama (Lokalny)',
-      value: status.ollama.status === 'available' ? 'Dostępny' : 'Niedostępny',
+      label: 'Gemini API',
+      value: status.gemini.status === 'available' ? 'Dostępny' : 'Niedostępny',
       icon: CheckCircle,
-      status: status.ollama.status === 'available' ? 'success' : 'error',
-      details: status.ollama.using_local ? 'Używany lokalny model open-source' : 'API mode'
+      status: status.gemini.status === 'available' ? 'success' : 'error',
+      details: status.gemini.using_api ? 'Używany Gemini API' : 'API mode'
     },
     {
       label: 'Guardrails',

@@ -51,13 +51,10 @@ export interface SystemStatus {
       status: string
     } | null
   }
-  ollama: {
-    status: string
-    using_local: boolean
-  }
   gemini: {
-    available: boolean
+    status: string
     using_api: boolean
+    available: boolean
   }
   guardrails: {
     enabled: boolean
@@ -77,5 +74,20 @@ export interface Case {
   compliance_score: number
   created_at: string
   updated_at: string
+}
+
+export interface Scenario {
+  id: string
+  title: string
+  horizon: '12M' | '36M'
+  risk_level: 'LOW' | 'MEDIUM' | 'HIGH'
+  confidence: number
+  drivers: string[]
+  recommendations: string[]
+  explainability: {
+    key_factors: Array<{ factor: string; weight: number }>
+    logic_summary: string
+  }
+  scenario_type: 'positive' | 'negative'
 }
 

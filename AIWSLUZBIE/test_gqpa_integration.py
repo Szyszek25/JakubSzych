@@ -1,6 +1,6 @@
 """
 🧪 Test integracji z GQPA Core
-Sprawdza czy asystent poprawnie korzysta z biblioteki gqpa_core
+Sprawdza czy asystent poprawnie korzysta z biblioteki hama_core
 """
 
 import os
@@ -19,8 +19,8 @@ print("="*70)
 # Test 1: Import GQPA Core
 print("\n[1] Test importu GQPA Core...")
 try:
-    from gqpa_core import get_gqpa_info
-    info = get_gqpa_info()
+    from hama_core import get_hama_info
+    info = get_hama_info()
     print(f"✅ GQPA Core załadowany:")
     print(f"   - Nazwa: {info['name']}")
     print(f"   - Wersja: {info['version']}")
@@ -28,13 +28,13 @@ try:
     print(f"   - Status: {info['status']}")
 except ImportError as e:
     print(f"❌ Błąd importu GQPA Core: {e}")
-    print("   Upewnij się, że folder system/gqpa_core/ istnieje")
+    print("   Upewnij się, że folder system/hama_core/ istnieje")
 
 # Test 2: Import asystenta
 print("\n[2] Test importu asystenta...")
 try:
     from asystent_ai_gqpa_integrated import (
-        GQPAAdministrativeAssistant,
+        HAMAAdministrativeAssistant,
         GeminiCognitiveAdapter,
         create_demo_assistant
     )
@@ -49,8 +49,8 @@ try:
     print("✅ Asystent utworzony poprawnie")
     
     # Sprawdź czy ma informację o GQPA
-    if hasattr(assistant, 'gqpa_info') and assistant.gqpa_info:
-        print(f"✅ Informacja o GQPA: {assistant.gqpa_info['name']}")
+    if hasattr(assistant, 'hama_info') and assistant.hama_info:
+        print(f"✅ Informacja o HAMA Diamond: {assistant.hama_info['name']}")
     else:
         print("⚠️ Brak informacji o GQPA (może być OK jeśli GQPA nie jest dostępne)")
         
@@ -61,11 +61,11 @@ except Exception as e:
 
 # Test 4: Sprawdzenie struktury
 print("\n[4] Test struktury projektu...")
-gqpa_core_path = os.path.join(_system_dir, 'gqpa_core', '__init__.py')
-if os.path.exists(gqpa_core_path):
-    print(f"✅ GQPA Core znajduje się w: {gqpa_core_path}")
+hama_core_path = os.path.join(_system_dir, 'hama_core', '__init__.py')
+if os.path.exists(hama_core_path):
+    print(f"✅ HAMA Diamond Core znajduje się w: {hama_core_path}")
 else:
-    print(f"⚠️ GQPA Core nie znaleziony w: {gqpa_core_path}")
+    print(f"⚠️ HAMA Diamond Core nie znaleziony w: {hama_core_path}")
 
 license_path = os.path.join(_system_dir, 'LICENSE_GQPA.txt')
 if os.path.exists(license_path):

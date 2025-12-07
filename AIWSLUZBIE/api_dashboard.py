@@ -22,7 +22,7 @@ if _system_dir not in sys.path:
 # Import asystenta
 try:
     from asystent_ai_gqpa_integrated import (
-        GQPAAdministrativeAssistant,
+        HAMAAdministrativeAssistant,
         GeminiCognitiveAdapter,
         AdministrativeCase,
         create_demo_assistant
@@ -48,15 +48,15 @@ app.add_middleware(
 )
 
 # Globalna instancja asystenta
-assistant_instance: Optional[GQPAAdministrativeAssistant] = None
+assistant_instance: Optional[HAMAAdministrativeAssistant] = None
 
-def get_assistant() -> GQPAAdministrativeAssistant:
+def get_assistant() -> HAMAAdministrativeAssistant:
     """Pobierz lub utwórz instancję asystenta"""
     global assistant_instance
     if assistant_instance is None:
         if ASSISTANT_AVAILABLE:
             adapter = GeminiCognitiveAdapter(None, use_local_model=True)
-            assistant_instance = GQPAAdministrativeAssistant(adapter)
+            assistant_instance = HAMAAdministrativeAssistant(adapter)
         else:
             raise HTTPException(status_code=503, detail="Asystent nie jest dostępny")
     return assistant_instance
@@ -108,7 +108,7 @@ async def health_check():
         return {
             "status": "healthy",
             "assistant_loaded": assistant is not None,
-            "gqpa_info": assistant.gqpa_info if assistant else None,
+            "hama_info": assistant.hama_info if assistant else None,
             "timestamp": datetime.now().isoformat()
         }
     except Exception as e:
@@ -460,23 +460,20 @@ async def get_system_status():
     try:
         assistant = get_assistant()
         
-        # Status Ollama
-        ollama_status = "unknown"
+        # Status Gemini
+        gemini_status = "unknown"
         if hasattr(assistant.adapter, 'local_adapter') and assistant.adapter.local_adapter:
-            ollama_status = "available" if assistant.adapter.local_adapter.is_available() else "unavailable"
+            gemini_status = "available" if assistant.adapter.local_adapter.is_available() else "unavailable"
         
         return {
-            "gqpa": {
-                "available": assistant.gqpa_info is not None,
-                "info": assistant.gqpa_info
-            },
-            "ollama": {
-                "status": ollama_status,
-                "using_local": assistant.adapter.use_local_model
+            "hama": {
+                "available": assistant.hama_info is not None,
+                "info": assistant.hama_info
             },
             "gemini": {
-                "available": assistant.adapter.gemini is not None,
-                "using_api": not assistant.adapter.use_local_model and assistant.adapter.gemini is not None
+                "status": gemini_status,
+                "using_api": assistant.adapter.use_local_model,
+                "available": assistant.adapter.gemini is not None or (assistant.adapter.local_adapter and assistant.adapter.local_adapter.is_available())
             },
             "guardrails": {
                 "enabled": True,

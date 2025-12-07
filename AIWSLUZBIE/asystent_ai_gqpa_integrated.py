@@ -1,9 +1,9 @@
 """
 🏛️ ASYSTENT AI DLA ADMINISTRACJI - ROZWIĄZANIE KOMPLETNE
-Integracja z architekturą GQPA DIAMOND dla wyzwania HackNation 2024
+Integracja z architekturą HAMA DIAMOND dla wyzwania HackNation 2024
 
 System wspierający orzeczników w Departamencie Turystyki MSiT
-z wykorzystaniem zaawansowanej architektury kognitywnej GQPA
+z wykorzystaniem zaawansowanej architektury kognitywnej HAMA Diamond
 
 ═══════════════════════════════════════════════════════════════════════════
 ✅ FOREGROUND IP - PODLEGA PRZENIESIENIU PRAW
@@ -11,8 +11,8 @@ z wykorzystaniem zaawansowanej architektury kognitywnej GQPA
 Ten moduł został stworzony na hackathonie HackNation 2025.
 Kod może być przekazany zgodnie z regulaminem hackathonu.
 
-⚠️ UWAGA: Moduł wykorzystuje GQPA DIAMOND jako Background IP.
-GQPA jest utworem współautorskim (Jakub Szych & Michał Wojtków)
+⚠️ UWAGA: Moduł wykorzystuje HAMA DIAMOND jako Background IP.
+HAMA Diamond jest utworem współautorskim (Jakub Szych & Michał Wojtków)
 i NIE podlega przeniesieniu praw. Zobacz: OSWIADCZENIE_PRAWNE.md
 ═══════════════════════════════════════════════════════════════════════════
 
@@ -40,10 +40,10 @@ warnings.filterwarnings('ignore')
 
 print("""
 ╔══════════════════════════════════════════════════════════════════╗
-║     🏛️ ASYSTENT AI DLA ADMINISTRACJI - GQPA INTEGRATED 🏛️       ║
+║     🏛️ ASYSTENT AI DLA ADMINISTRACJI - HAMA DIAMOND INTEGRATED 🏛️       ║
 ║                                                                  ║
 ║  System wspierający orzeczników w Departamencie Turystyki MSiT   ║
-║  Architektura: GQPA DIAMOND (Neuro-Symbolic Cognitive AI)        ║
+║  Architektura: HAMA DIAMOND (Neuro-Symbolic Cognitive AI)        ║
 ╚══════════════════════════════════════════════════════════════════╝
 """)
 
@@ -63,7 +63,7 @@ except ImportError:
         GEMINI_AVAILABLE = False
         genai = None
         genai_types = None
-        print("ℹ️ Google Generative AI nie dostępne - używam lokalnego modelu (Ollama/Llama)")
+        print("ℹ️ Google Generative AI nie dostępne - ustaw GOOGLE_API_KEY")
 
 try:
     import torch  # type: ignore
@@ -80,7 +80,7 @@ import pandas as pd
 import numpy as np
 
 # ============================================================================
-# IMPORT GQPA CORE (BACKGROUND IP)
+# IMPORT HAMA DIAMOND CORE (BACKGROUND IP)
 # ============================================================================
 
 # Dodaj ścieżkę do system/ do sys.path
@@ -90,25 +90,25 @@ if _system_dir not in sys.path:
     sys.path.insert(0, _system_dir)
 
 try:
-    # Import GQPA Core jako biblioteki zewnętrznej
-    from gqpa_core import get_gqpa_info  # type: ignore
-    GQPA_INFO = get_gqpa_info()
-    print(f"✅ GQPA Core załadowany: {GQPA_INFO['name']} v{GQPA_INFO['version']}")
-    print(f"   Status: {GQPA_INFO['status']}")
+    # Import HAMA Diamond Core jako biblioteki zewnętrznej
+    from hama_core import get_hama_info  # type: ignore
+    HAMA_INFO = get_hama_info()
+    print(f"✅ HAMA Diamond Core załadowany: {HAMA_INFO['name']} v{HAMA_INFO['version']}")
+    print(f"   Status: {HAMA_INFO['status']}")
 except ImportError:
-    GQPA_INFO = None
-    print("⚠️ GQPA Core nie dostępne - niektóre funkcje mogą być ograniczone")
+    HAMA_INFO = None
+    print("⚠️ HAMA Diamond Core nie dostępne - niektóre funkcje mogą być ograniczone")
     print("   (To normalne - GQPA jest Background IP)")
 
 # ============================================================================
 # KONFIGURACJA MODELI
 # ============================================================================
 
-# Konfiguracja modelu Gemini (używany tylko jako fallback, gdy lokalny model nie jest dostępny)
-GEMINI_MODEL_NAME = "models/gemini-3-pro-preview"  # Możesz zmienić na: "gemini-2.0-flash-exp", "models/gemini-3-pro-preview", itp.
+# Konfiguracja modelu Gemini (domyślny)
+GEMINI_MODEL_NAME = "gemini-2.5-flash"  # Domyślnie używany model Gemini
 
-# Konfiguracja lokalnego modelu (domyślny)
-OLLAMA_MODEL_NAME = "llama3.2"  # Domyślnie używany model Ollama
+# Domyślny klucz API dla jury (fallback jeśli nie ustawiono zmiennej środowiskowej)
+DEFAULT_GEMINI_API_KEY = "AIzaSyC3EB_JAX2pTWLJAAiXuiKXTQA8pz4iZzo"
 
 def configure_gemini():
     """Konfiguracja modelu Gemini - obsługuje nowy SDK (google-genai) i stary (google.generativeai)"""
@@ -120,32 +120,44 @@ def configure_gemini():
         if hasattr(genai, 'Client'):
             # Nowy SDK (google-genai)
             api_key = os.environ.get('GOOGLE_API_KEY') or os.environ.get('GEMINI_API_KEY')
+            
+            # Spróbuj z Colab jeśli nie ma w zmiennej środowiskowej
+            if not api_key:
+                try:
+                    from google.colab import userdata  # type: ignore
+                    api_key = userdata.get('GOOGLE_API_KEY') or userdata.get('GEMINI_API_KEY')
+                except ImportError:
+                    pass
+            
+            # Fallback do domyślnego klucza dla jury
+            if not api_key:
+                api_key = DEFAULT_GEMINI_API_KEY
+                print("ℹ️ Używam domyślnego klucza API (dla jury)")
+            
             if api_key:
                 client = genai.Client(api_key=api_key)
                 print("✅ Gemini Client (nowy SDK google-genai) skonfigurowany")
                 return client
-            else:
-                # Spróbuj z Colab
-                try:
-                    from google.colab import userdata  # type: ignore
-                    api_key = userdata.get('GOOGLE_API_KEY') or userdata.get('GEMINI_API_KEY')
-                    if api_key:
-                        client = genai.Client(api_key=api_key)
-                        print("✅ Gemini Client (nowy SDK, Colab) skonfigurowany")
-                        return client
-                except ImportError:
-                    pass
-                return None
+            return None
         else:
             # Stary SDK (google.generativeai) - dla kompatybilności
-            if os.environ.get('GOOGLE_API_KEY'):
-                genai.configure(api_key=os.environ.get('GOOGLE_API_KEY'))
-            elif hasattr(sys.modules.get('google.colab', None), 'userdata'):
+            api_key = os.environ.get('GOOGLE_API_KEY')
+            
+            # Spróbuj z Colab jeśli nie ma w zmiennej środowiskowej
+            if not api_key and hasattr(sys.modules.get('google.colab', None), 'userdata'):
                 try:
                     from google.colab import userdata  # type: ignore
-                    genai.configure(api_key=userdata.get('GOOGLE_API_KEY'))
+                    api_key = userdata.get('GOOGLE_API_KEY')
                 except ImportError:
-                    return None
+                    pass
+            
+            # Fallback do domyślnego klucza dla jury
+            if not api_key:
+                api_key = DEFAULT_GEMINI_API_KEY
+                print("ℹ️ Używam domyślnego klucza API (dla jury)")
+            
+            if api_key:
+                genai.configure(api_key=api_key)
             else:
                 return None
             
@@ -644,7 +656,7 @@ class CognitiveImmuneSystem:
     def verify_content(self, content: ContentItem) -> Dict:
         """
         Weryfikuje treść poprzez konfrontację z Modelem Świata.
-        Wykorzystuje lokalny model (Ollama) do semantycznego porównania.
+        Wykorzystuje Gemini API do semantycznego porównania.
         """
         context_knowledge = str(list(getattr(self.agent, 'world_model', WorldModel()).objects.keys()))
         
@@ -705,30 +717,26 @@ class GeminiCognitiveAdapter:
         # Sprawdź czy to nowy SDK (Client) czy stary (GenerativeModel)
         self.is_new_sdk = hasattr(self.gemini, 'models') if self.gemini else False
         
-        # Obsługa lokalnych modeli (open-source) - PRIORYTET
+        # Obsługa Gemini API - PRIORYTET
         self.use_local_model = use_local_model
         self.local_adapter = None
         if use_local_model and LOCAL_MODELS_AVAILABLE and LocalModelAdapter:
             try:
-                # Użyj domyślnego modelu Ollama (llama3.2)
-                from local_model_adapter import OllamaAdapter
-                self.local_adapter = LocalModelAdapter()
-                # Ustaw domyślny model jeśli adapter używa Ollama
-                if hasattr(self.local_adapter, 'ollama') and self.local_adapter.ollama:
-                    self.local_adapter.ollama.model_name = OLLAMA_MODEL_NAME
+                # Użyj Gemini API jako domyślnego
+                self.local_adapter = LocalModelAdapter(preferred_backend="gemini")
                 if self.local_adapter.is_available():
-                    print("✅ Używam lokalnego modelu Ollama/Llama (open-source)")
+                    print("✅ Używam Gemini API")
                 else:
-                    print("⚠️ Lokalny model nie dostępny!")
-                    print("   Wskazówka: Uruchom 'ollama serve' lub zobacz NAPRAWA_OLLAMA_WINDOWS.md")
-                    raise Exception("Lokalny model nie dostępny")
+                    print("⚠️ Gemini API nie dostępne!")
+                    print("   Wskazówka: Ustaw zmienną środowiskową GOOGLE_API_KEY lub GEMINI_API_KEY")
+                    raise Exception("Gemini API nie dostępne")
             except Exception as e:
-                print(f"❌ Błąd inicjalizacji lokalnego modelu: {e}")
-                print("   Upewnij się, że Ollama działa: ollama serve")
+                print(f"❌ Błąd inicjalizacji Gemini: {e}")
+                print("   Ustaw zmienną środowiskową GOOGLE_API_KEY lub GEMINI_API_KEY")
                 raise
         elif use_local_model:
-            print("❌ Lokalne modele nie są dostępne - zainstaluj local_model_adapter.py")
-            raise Exception("Lokalne modele nie dostępne")
+            print("❌ Gemini adapter nie jest dostępny - zainstaluj google-genai: pip install google-genai")
+            raise Exception("Gemini adapter nie dostępny")
     
     def cognitive_query(self, prompt: str, context: Optional[Dict[str, Any]] = None, json_mode: bool = False) -> Dict[str, Any]:
         """Wykonanie zapytania kognitywnego z guardrails"""
@@ -760,7 +768,7 @@ Odpowiedz profesjonalnie, w języku prawniczym, z uwzględnieniem kontekstu admi
         
         start_time = time.time()
         try:
-            # PRIORYTET: Lokalny model (open-source) - Ollama/Llama
+            # PRIORYTET: Gemini API (przez local_adapter)
             if self.use_local_model and self.local_adapter and self.local_adapter.is_available():
                 result = self.local_adapter.generate(
                     enriched_prompt,
@@ -774,7 +782,7 @@ Odpowiedz profesjonalnie, w języku prawniczym, z uwzględnieniem kontekstu admi
                 success = result.get('success', False)
                 error = result.get('error')
                 latency = result.get('latency', time.time() - start_time)
-            # FALLBACK: API (Gemini) - tylko jeśli lokalny model nie jest używany
+            # FALLBACK: Bezpośrednie API (Gemini) - tylko jeśli local_adapter nie jest używany
             elif not self.use_local_model and self.gemini is not None:
                 # Nowy SDK (google-genai) - używa client.models.generate_content()
                 if self.is_new_sdk:
@@ -801,22 +809,22 @@ Odpowiedz profesjonalnie, w języku prawniczym, z uwzględnieniem kontekstu admi
                 error = None
                 latency = time.time() - start_time
             else:
-                # Ostatnia deska ratunku - sprawdź czy lokalny model jest dostępny
+                # Ostatnia deska ratunku - sprawdź czy Gemini adapter jest dostępny
                 if self.use_local_model:
-                    # Próba użycia lokalnego modelu mimo wcześniejszego sprawdzenia
+                    # Próba użycia Gemini adaptera mimo wcześniejszego sprawdzenia
                     if self.local_adapter:
                         result = self.local_adapter.generate(enriched_prompt)
                         response_text = result.get('response', '')
                         success = result.get('success', False)
-                        error = result.get('error', 'Lokalny model nie odpowiedział')
+                        error = result.get('error', 'Gemini API nie odpowiedział')
                         latency = result.get('latency', time.time() - start_time)
                     else:
-                        response_text = "[BŁĄD] Lokalny model (Ollama) nie jest dostępny. Uruchom: ollama serve"
+                        response_text = "[BŁĄD] Gemini API nie jest dostępne. Ustaw GOOGLE_API_KEY lub GEMINI_API_KEY"
                         success = False
-                        error = "Lokalny model nie dostępny"
+                        error = "Gemini API nie dostępne"
                         latency = time.time() - start_time
                 else:
-                    # Symulacja tylko gdy nie używamy lokalnego modelu
+                    # Symulacja tylko gdy nie używamy Gemini
                     response_text = f"[SYMULACJA] Odpowiedź na: {prompt[:100]}..."
                     success = True
                     error = None
@@ -1063,7 +1071,7 @@ class ExternalSystemsIntegration:
 # GŁÓWNY ASYSTENT AI DLA ORZECZNIKÓW (GQPA INTEGRATED)
 # ============================================================================
 
-class GQPAAdministrativeAssistant:
+class HAMAAdministrativeAssistant:
     """
     Główny moduł asystenta AI z integracją GQPA
     
@@ -1078,10 +1086,10 @@ class GQPAAdministrativeAssistant:
         self.guardrails = SecurityGuardrails()
         
         # Informacja o GQPA (Background IP)
-        self.gqpa_info = GQPA_INFO if GQPA_INFO else None
-        if self.gqpa_info:
-            print(f"📚 Używana biblioteka: {self.gqpa_info['name']} v{self.gqpa_info['version']}")
-            print(f"   Status: {self.gqpa_info['status']}")
+        self.hama_info = HAMA_INFO if HAMA_INFO else None
+        if self.hama_info:
+            print(f"📚 Używana biblioteka: {self.hama_info['name']} v{self.hama_info['version']}")
+            print(f"   Status: {self.hama_info['status']}")
         
         # Baza spraw
         self.cases: Dict[str, AdministrativeCase] = {}
@@ -1529,12 +1537,12 @@ def create_demo_assistant(use_local_model: bool = True):
     Tworzenie demonstracyjnego asystenta
     
     Args:
-        use_local_model: Jeśli True, używa lokalnego modelu (Ollama/HF) zamiast API
-                        Domyślnie True - preferowane open-source (Llama/Ollama)
+        use_local_model: Jeśli True, używa Gemini API przez adapter
+                        Domyślnie True - preferowane Gemini API
     """
     # Używamy None dla gemini_client gdy używamy lokalnego modelu
     adapter = GeminiCognitiveAdapter(None, use_local_model=use_local_model)
-    assistant = GQPAAdministrativeAssistant(adapter)
+    assistant = HAMAAdministrativeAssistant(adapter)
     return assistant
 
 def demo_full_workflow():
@@ -1543,7 +1551,7 @@ def demo_full_workflow():
     print("🏛️ DEMONSTRACJA ASYSTENTA AI DLA ADMINISTRACJI")
     print("="*70)
     
-    assistant = create_demo_assistant(use_local_model=True)
+    assistant = create_demo_assistant(use_local_model=True)  # Używa Gemini API
     
     # 1. Utworzenie przykładowej sprawy
     print("\n[1] Tworzenie przykładowej sprawy...")

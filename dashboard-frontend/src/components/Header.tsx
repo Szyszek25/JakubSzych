@@ -28,7 +28,7 @@ export default function Header({ onRefresh }: HeaderProps) {
       console.error('Błąd inicjalizacji danych demo:', error)
       setLoading(false)
       const errorMsg = error?.response?.data?.detail || error?.message || 'Nieznany błąd'
-      alert(`❌ Błąd: ${errorMsg}\n\nUpewnij się że backend działa na porcie 8000`)
+      alert(`❌ Błąd: ${errorMsg}\n\nUpewnij się że backend działa na porcie 8002`)
     }
   }
 

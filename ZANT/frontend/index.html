@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZANT - ZUS Accident Notification Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .tabs {
+            display: flex;
+            background: #f5f5f5;
+            border-bottom: 2px solid #ddd;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            background: #f5f5f5;
+            border: none;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .tab:hover {
+            background: #e0e0e0;
+        }
+        
+        .tab.active {
+            background: white;
+            border-bottom: 3px solid #667eea;
+            color: #667eea;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .analysis-result {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .missing-field {
+            background: #fff3cd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .missing-field.high-priority {
+            border-left-color: #dc3545;
+            background: #f8d7da;
+        }
+        
+        .suggestion {
+            margin-top: 10px;
+            padding: 10px;
+            background: #e7f3ff;
+            border-radius: 5px;
+            font-style: italic;
+        }
+        
+        .decision-result {
+            margin-top: 30px;
+            padding: 25px;
+            border-radius: 8px;
+        }
+        
+        .decision-result.recognize {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+        }
+        
+        .decision-result.not_recognize {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+        }
+        
+        .decision-result.needs_review {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .confidence-bar {
+            width: 100%;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #28a745, #20c997);
+            transition: width 0.5s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .file-upload {
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .file-upload:hover {
+            border-color: #667eea;
+            background: #f5f5f5;
+        }
+        
+        .file-upload.dragover {
+            border-color: #667eea;
+            background: #e7f3ff;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .loading.active {
+            display: block;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏥 ZANT</h1>
+            <p>ZUS Accident Notification Tool</p>
+        </div>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('assistant')">
+                Asystent Zgłoszenia
+            </button>
+            <button class="tab" onclick="switchTab('decision')">
+                Wsparcie Decyzji
+            </button>
+        </div>
+        
+        <div class="content">
+            <!-- TAB 1: Asystent Zgłoszenia -->
+            <div id="assistant-tab" class="tab-content active">
+                <h2>Zgłoś Wypadek przy Pracy</h2>
+                <p style="margin-bottom: 30px; color: #666;">
+                    Wypełnij formularz zgłoszenia. Asystent pomoże Ci uzupełnić brakujące informacje.
+                </p>
+                
+                <form id="report-form">
+                    <div class="form-group">
+                        <label>Data wypadku *</label>
+                        <input type="date" id="data_wypadku" name="data_wypadku">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Godzina wypadku *</label>
+                        <input type="time" id="godzina_wypadku" name="godzina_wypadku">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Miejsce wypadku *</label>
+                        <input type="text" id="miejsce_wypadku" name="miejsce_wypadku" 
+                               placeholder="Podaj dokładny adres lub lokalizację">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Okoliczności wypadku *</label>
+                        <textarea id="okolicznosci_wypadku" name="okolicznosci_wypadku"
+                                  placeholder="Opisz szczegółowo co się wydarzyło..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Przyczyna wypadku *</label>
+                        <textarea id="przyczyna_wypadku" name="przyczyna_wypadku"
+                                  placeholder="Jaka była bezpośrednia przyczyna wypadku?"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Dane poszkodowanego *</label>
+                        <input type="text" id="dane_poszkodowanego" name="dane_poszkodowanego"
+                               placeholder="Imię, nazwisko, PESEL lub NIP">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Rodzaj działalności *</label>
+                        <input type="text" id="rodzaj_dzialalnosci" name="rodzaj_dzialalnosci"
+                               placeholder="Np. remonty, naprawy, prace na wysokości">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Opis urazu *</label>
+                        <textarea id="opis_urazu" name="opis_urazu"
+                                  placeholder="Opisz doznane obrażenia..."></textarea>
+                    </div>
+                    
+                    <button type="button" class="btn" onclick="analyzeReport()">
+                        Analizuj Zgłoszenie
+                    </button>
+                </form>
+                
+                <div id="analysis-result"></div>
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Analizuję zgłoszenie...</p>
+                </div>
+            </div>
+            
+            <!-- TAB 2: Wsparcie Decyzji -->
+            <div id="decision-tab" class="tab-content">
+                <h2>Analiza Dokumentacji</h2>
+                <p style="margin-bottom: 30px; color: #666;">
+                    Prześlij dokumentację PDF wypadku. System przeanalizuje i zarekomenduje decyzję.
+                </p>
+                
+                <div class="file-upload" id="file-upload" 
+                     ondrop="handleDrop(event)" 
+                     ondragover="handleDragOver(event)"
+                     ondragleave="handleDragLeave(event)">
+                    <p>📄 Przeciągnij plik PDF tutaj lub kliknij, aby wybrać</p>
+                    <input type="file" id="pdf-file" accept=".pdf" style="display: none;" 
+                           onchange="handleFileSelect(event)">
+                </div>
+                
+                <div id="decision-result"></div>
+                <div class="loading" id="loading-decision">
+                    <div class="spinner"></div>
+                    <p>Analizuję dokumentację...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const API_BASE = 'http://localhost:8000';
+        
+        function switchTab(tabName) {
+            // Ukryj wszystkie taby
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Pokaż wybrany tab
+            document.getElementById(tabName + '-tab').classList.add('active');
+            event.target.classList.add('active');
+        }
+        
+        async function analyzeReport() {
+            const loading = document.getElementById('loading');
+            const resultDiv = document.getElementById('analysis-result');
+            
+            loading.classList.add('active');
+            resultDiv.innerHTML = '';
+            
+            // Zbierz dane z formularza
+            const formData = {};
+            const form = document.getElementById('report-form');
+            const inputs = form.querySelectorAll('input, textarea');
+            inputs.forEach(input => {
+                if (input.value) {
+                    formData[input.name] = input.value;
+                }
+            });
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/report/analyze`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const data = await response.json();
+                
+                // Wyświetl wyniki
+                let html = '<div class="analysis-result">';
+                html += `<h3>Wynik Analizy</h3>`;
+                html += `<p><strong>Kompletność:</strong> ${(data.completeness_score * 100).toFixed(0)}%</p>`;
+                
+                if (data.missing_fields && data.missing_fields.length > 0) {
+                    html += '<h4>Brakujące pola:</h4>';
+                    data.missing_fields.forEach(field => {
+                        const priorityClass = field.priority === 'high' ? 'high-priority' : '';
+                        html += `<div class="missing-field ${priorityClass}">`;
+                        html += `<strong>${field.field_description}</strong>`;
+                        if (field.suggestion) {
+                            html += `<div class="suggestion">💡 ${field.suggestion}</div>`;
+                        }
+                        html += `</div>`;
+                    });
+                }
+                
+                if (data.suggestions && data.suggestions.length > 0) {
+                    html += '<h4>Sugestie:</h4><ul>';
+                    data.suggestions.forEach(suggestion => {
+                        html += `<li>${suggestion}</li>`;
+                    });
+                    html += '</ul>';
+                }
+                
+                if (data.validation_errors && data.validation_errors.length > 0) {
+                    html += '<h4>Błędy walidacji:</h4><ul>';
+                    data.validation_errors.forEach(error => {
+                        html += `<li style="color: red;">${error}</li>`;
+                    });
+                    html += '</ul>';
+                }
+                
+                html += '</div>';
+                resultDiv.innerHTML = html;
+                
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="analysis-result" style="border-left-color: red;">
+                    <p style="color: red;">Błąd: ${error.message}</p>
+                    <p>Upewnij się, że backend działa na porcie 8000</p>
+                </div>`;
+            } finally {
+                loading.classList.remove('active');
+            }
+        }
+        
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('dragover');
+        }
+        
+        function handleDragLeave(e) {
+            e.currentTarget.classList.remove('dragover');
+        }
+        
+        function handleDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0 && files[0].type === 'application/pdf') {
+                analyzeDecision(files[0]);
+            }
+        }
+        
+        function handleFileSelect(e) {
+            const file = e.target.files[0];
+            if (file) {
+                analyzeDecision(file);
+            }
+        }
+        
+        async function analyzeDecision(file) {
+            const loading = document.getElementById('loading-decision');
+            const resultDiv = document.getElementById('decision-result');
+            
+            loading.classList.add('active');
+            resultDiv.innerHTML = '';
+            
+            const formData = new FormData();
+            formData.append('file', file);
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/decision/analyze`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                // Wyświetl wyniki
+                let html = '<div class="decision-result ' + data.decision + '">';
+                html += `<h3>Rekomendacja: ${data.decision === 'recognize' ? 'UZNAĆ ZA WYPADEK' : 
+                        data.decision === 'not_recognize' ? 'NIE UZNAWAĆ ZA WYPADEK' : 
+                        'WYMAGA WERYFIKACJI'}</h3>`;
+                
+                html += `<div class="confidence-bar">`;
+                html += `<div class="confidence-fill" style="width: ${data.confidence * 100}%">`;
+                html += `${(data.confidence * 100).toFixed(0)}% pewności`;
+                html += `</div></div>`;
+                
+                html += `<h4>Uzasadnienie:</h4><p>${data.reasoning}</p>`;
+                
+                if (data.legal_basis && data.legal_basis.length > 0) {
+                    html += `<h4>Podstawa prawna:</h4><ul>`;
+                    data.legal_basis.forEach(basis => {
+                        html += `<li>${basis}</li>`;
+                    });
+                    html += `</ul>`;
+                }
+                
+                if (data.risk_factors && data.risk_factors.length > 0) {
+                    html += `<h4>Czynniki ryzyka:</h4><ul>`;
+                    data.risk_factors.forEach(factor => {
+                        html += `<li>${factor}</li>`;
+                    });
+                    html += `</ul>`;
+                }
+                
+                html += '</div>';
+                resultDiv.innerHTML = html;
+                
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="decision-result needs_review">
+                    <p style="color: red;">Błąd: ${error.message}</p>
+                    <p>Upewnij się, że backend działa na porcie 8000</p>
+                </div>`;
+            } finally {
+                loading.classList.remove('active');
+            }
+        }
+        
+        // Kliknięcie w file-upload
+        document.getElementById('file-upload').addEventListener('click', () => {
+            document.getElementById('pdf-file').click();
+        });
+    </script>
+</body>
+</html>
+

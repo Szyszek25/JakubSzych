@@ -1,16 +1,16 @@
 # Scenariusze Jutra - Wymagania
 # Narzędzie do analizy foresightowej dla MSZ
-
-# Podstawowe biblioteki
-python>=3.9
+#
+# WYMAGANA WERSJA PYTHON: >= 3.9
+# (Python nie jest instalowany przez pip - musi być już zainstalowany w systemie)
 
 # NLP i analiza danych
-openai>=1.0.0
-langchain>=0.1.0
-langchain-openai>=0.0.5
-langchain-community>=0.0.20
+# openai>=1.0.0  # OPCJONALNE - używamy lokalnych modeli (Ollama)
+# langchain>=0.1.0  # OPCJONALNE
+# langchain-openai>=0.0.5  # OPCJONALNE
+# langchain-community>=0.0.20  # OPCJONALNE
 beautifulsoup4>=4.12.0
-requests>=2.31.0
+requests>=2.31.0  # Wymagane dla Ollama API
 newspaper3k>=0.2.8
 lxml_html_clean>=0.4.0  # Wymagane dla newspaper3k w Python 3.13+
 feedparser>=6.0.10
@@ -33,8 +33,8 @@ seaborn>=0.13.0
 plotly>=5.18.0
 
 # Baza danych i pamięć
-sqlite3  # wbudowane w Python
-pickle  # wbudowane w Python
+# sqlite3 - wbudowane w Python (nie wymaga instalacji)
+# pickle - wbudowane w Python (nie wymaga instalacji)
 
 # Bezpieczeństwo
 cryptography>=41.0.0
@@ -51,5 +51,9 @@ webdriver-manager>=4.0.0
 
 # Async operations
 aiohttp>=3.9.0
-asyncio  # wbudowane w Python
+# asyncio - wbudowane w Python (nie wymaga instalacji)
+
+# API Server
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
 

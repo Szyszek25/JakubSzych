@@ -1,6 +1,6 @@
 """
-🔧 Lokalny Adapter Modelu - Open Source LLM
-Obsługa lokalnych modeli językowych (Ollama, Hugging Face, itp.)
+🔧 Adapter Modelu - Gemini API
+Obsługa Google Gemini API przez google-genai SDK
 """
 
 import os
@@ -8,109 +8,115 @@ import time
 from typing import Dict, Any, Optional
 from datetime import datetime
 
+# Domyślny klucz API dla jury (fallback jeśli nie ustawiono zmiennej środowiskowej)
+DEFAULT_GEMINI_API_KEY = "AIzaSyC3EB_JAX2pTWLJAAiXuiKXTQA8pz4iZzo"
+
 # ============================================================================
-# OLLAMA ADAPTER (najłatwiejszy w użyciu)
+# GEMINI ADAPTER (używa google-genai SDK)
 # ============================================================================
 
-class OllamaAdapter:
-    """Adapter dla Ollama - lokalne modele open-source"""
+class GeminiAdapter:
+    """Adapter dla Google Gemini API - używa google-genai SDK"""
     
-    def __init__(self, model_name: str = None, base_url: str = "http://localhost:11434"):
-        # Domyślnie użyj llama3.2 jeśli nie podano
+    def __init__(self, model_name: str = None, api_key: str = None):
+        # Domyślnie użyj gemini-2.5-flash jeśli nie podano
         if model_name is None:
             try:
                 import asystent_ai_gqpa_integrated
-                model_name = getattr(asystent_ai_gqpa_integrated, 'OLLAMA_MODEL_NAME', 'llama3.2')
+                model_name = getattr(asystent_ai_gqpa_integrated, 'GEMINI_MODEL_NAME', 'gemini-2.5-flash')
             except (ImportError, AttributeError):
-                model_name = "llama3.2"  # Fallback
-        self.model_name = model_name
-        self.base_url = base_url
-        self.available = False
+                model_name = "gemini-2.5-flash"  # Fallback
         
-        # Sprawdź dostępność Ollama
+        self.model_name = model_name
+        self.available = False
+        self.client = None
+        
+        # Sprawdź dostępność Gemini API
         try:
-            import requests  # type: ignore
-            self.requests = requests
+            from google import genai  # type: ignore
+            from google.genai import types as genai_types  # type: ignore
             
-            # Sprawdź czy serwer Ollama działa
-            try:
-                response = requests.get(f"{base_url}/api/tags", timeout=2)
-                if response.status_code == 200:
+            # Pobierz API key - najpierw z parametru, potem ze zmiennej środowiskowej, na końcu domyślny
+            if api_key is None:
+                api_key = os.environ.get('GOOGLE_API_KEY') or os.environ.get('GEMINI_API_KEY')
+            
+            # Fallback do domyślnego klucza dla jury
+            if not api_key:
+                api_key = DEFAULT_GEMINI_API_KEY
+                print("ℹ️ Używam domyślnego klucza API (dla jury)")
+            
+            if api_key:
+                try:
+                    self.client = genai.Client(api_key=api_key)
                     self.available = True
-                    print(f"✅ Ollama dostępne - model: {model_name}")
-                else:
-                    print(f"⚠️ Ollama nie odpowiada na {base_url}")
-                    print(f"   Uruchom: ollama serve")
-            except requests.exceptions.ConnectionError:
-                print(f"⚠️ Ollama nie działa na {base_url}")
-                print(f"   Instrukcja naprawy: zobacz NAPRAWA_OLLAMA_WINDOWS.md")
-                print(f"   Lub uruchom: ollama serve")
+                    print(f"✅ Gemini API dostępne - model: {model_name}")
+                except Exception as e:
+                    print(f"⚠️ Błąd konfiguracji Gemini: {e}")
+                    print(f"   Ustaw zmienną środowiskową GOOGLE_API_KEY lub GEMINI_API_KEY")
+            else:
+                print(f"⚠️ Brak klucza API Gemini")
+                print(f"   Ustaw zmienną środowiskową GOOGLE_API_KEY lub GEMINI_API_KEY")
         except ImportError:
-            print("⚠️ Biblioteka 'requests' nie dostępna - zainstaluj: pip install requests")
+            print("⚠️ Biblioteka 'google-genai' nie dostępna - zainstaluj: pip install google-genai")
         except Exception as e:
-            print(f"⚠️ Ollama nie dostępne: {e}")
-            print(f"   Sprawdź: NAPRAWA_OLLAMA_WINDOWS.md")
+            print(f"⚠️ Gemini nie dostępne: {e}")
     
     def generate(self, prompt: str, **kwargs) -> Dict[str, Any]:
-        """Generowanie odpowiedzi przez Ollama"""
-        if not self.available:
+        """Generowanie odpowiedzi przez Gemini API"""
+        if not self.available or self.client is None:
             return {
-                'response': "[OLLAMA NIE DOSTĘPNE] Uruchom Ollama: ollama serve",
+                'response': "[GEMINI NIE DOSTĘPNE] Ustaw GOOGLE_API_KEY lub GEMINI_API_KEY",
                 'success': False,
-                'error': 'Ollama nie dostępne'
+                'error': 'Gemini nie dostępne'
             }
         
         # JSON Mode - jeśli format="json" w kwargs
         use_json_mode = kwargs.get('format') == 'json' or kwargs.get('json_mode', False)
         
-        # Dodaj instrukcję JSON jeśli wymagane
-        if use_json_mode:
-            prompt = f"""{prompt}
-
-WAŻNE: Odpowiedz TYLKO w formacie JSON, bez dodatkowego tekstu. Użyj następującej struktury:
-{{
-  "key_facts": ["fakt1", "fakt2"],
-  "legal_references": ["art. 1", "ust. 2"],
-  "risk_factors": ["czynnik1"],
-  "confidence": 0.85
-}}"""
-        
+        start_time = time.time()
         try:
-            response = self.requests.post(
-                f"{self.base_url}/api/generate",
-                json={
-                    "model": self.model_name,
-                    "prompt": prompt,
-                    "stream": False,
-                    "format": "json" if use_json_mode else None,
-                    "options": {
-                        "temperature": kwargs.get('temperature', 0.7),
-                        "top_p": kwargs.get('top_p', 0.95),
-                        "num_predict": kwargs.get('max_tokens', 2048),
-                    }
-                },
-                timeout=120
+            from google.genai import types as genai_types
+            
+            # Konfiguracja generowania
+            config_dict = {
+                'temperature': kwargs.get('temperature', 0.7),
+                'top_p': kwargs.get('top_p', 0.95),
+                'top_k': kwargs.get('top_k', 40),
+                'max_output_tokens': kwargs.get('max_tokens', 2048),
+            }
+            
+            # Jeśli JSON mode, ustaw response_mime_type
+            if use_json_mode:
+                config_dict['response_mime_type'] = 'application/json'
+            
+            # Próbuj użyć GenerateContentConfig, jeśli dostępne
+            try:
+                config = genai_types.GenerateContentConfig(**config_dict)
+            except (AttributeError, TypeError):
+                config = config_dict
+            
+            # Generuj odpowiedź
+            response = self.client.models.generate_content(
+                model=self.model_name,
+                contents=prompt,
+                config=config
             )
             
-            if response.status_code == 200:
-                result = response.json()
-                return {
-                    'response': result.get('response', ''),
-                    'success': True,
-                    'error': None,
-                    'latency': result.get('total_duration', 0) / 1e9  # nanosekundy na sekundy
-                }
-            else:
-                return {
-                    'response': f"Błąd Ollama: {response.status_code}",
-                    'success': False,
-                    'error': f"HTTP {response.status_code}"
-                }
+            response_text = response.text if hasattr(response, 'text') else str(response)
+            latency = time.time() - start_time
+            
+            return {
+                'response': response_text,
+                'success': True,
+                'error': None,
+                'latency': latency
+            }
         except Exception as e:
             return {
-                'response': f"Błąd połączenia z Ollama: {str(e)}",
+                'response': f"Błąd Gemini API: {str(e)}",
                 'success': False,
-                'error': str(e)
+                'error': str(e),
+                'latency': time.time() - start_time
             }
 
 # ============================================================================
@@ -190,15 +196,15 @@ class HuggingFaceAdapter:
             }
 
 # ============================================================================
-# UNIFIED LOCAL MODEL ADAPTER
+# UNIFIED MODEL ADAPTER
 # ============================================================================
 
 class LocalModelAdapter:
-    """Unified adapter dla lokalnych modeli - automatycznie wybiera najlepszy dostępny"""
+    """Unified adapter dla modeli - używa Gemini API jako domyślnego"""
     
-    def __init__(self, preferred_backend: str = "ollama", model_name: str = None):
+    def __init__(self, preferred_backend: str = "gemini", model_name: str = None, api_key: str = None):
         self.preferred_backend = preferred_backend
-        self.ollama = None
+        self.gemini = None
         self.huggingface = None
         self.active_adapter = None
         
@@ -206,18 +212,18 @@ class LocalModelAdapter:
         if model_name is None:
             try:
                 import asystent_ai_gqpa_integrated
-                model_name = getattr(asystent_ai_gqpa_integrated, 'OLLAMA_MODEL_NAME', 'llama3.2')
+                model_name = getattr(asystent_ai_gqpa_integrated, 'GEMINI_MODEL_NAME', 'gemini-2.5-flash')
             except (ImportError, AttributeError):
-                model_name = "llama3.2"  # Fallback
+                model_name = "gemini-2.5-flash"  # Fallback
         
-        # Spróbuj Ollama (najłatwiejsze)
-        if preferred_backend in ["ollama", "auto"]:
-            self.ollama = OllamaAdapter(model_name=model_name)
-            if self.ollama.available:
-                self.active_adapter = self.ollama
+        # Spróbuj Gemini (domyślne)
+        if preferred_backend in ["gemini", "auto"]:
+            self.gemini = GeminiAdapter(model_name=model_name, api_key=api_key)
+            if self.gemini.available:
+                self.active_adapter = self.gemini
                 return
         
-        # Spróbuj Hugging Face
+        # Spróbuj Hugging Face (fallback)
         if preferred_backend in ["huggingface", "transformers", "auto"]:
             try:
                 self.huggingface = HuggingFaceAdapter()
@@ -227,7 +233,7 @@ class LocalModelAdapter:
             except Exception as e:
                 print(f"⚠️ Hugging Face nie dostępne: {e}")
         
-        print("⚠️ Żaden lokalny model nie jest dostępny - użyj API lub zainstaluj Ollama")
+        print("⚠️ Żaden model nie jest dostępny - ustaw GOOGLE_API_KEY dla Gemini")
     
     def generate(self, prompt: str, **kwargs) -> Dict[str, Any]:
         """Generowanie odpowiedzi - używa aktywnego adaptera"""
@@ -235,15 +241,15 @@ class LocalModelAdapter:
             return self.active_adapter.generate(prompt, **kwargs)
         else:
             return {
-                'response': "[LOKALNY MODEL NIE DOSTĘPNY] Uruchom Ollama lub załaduj model Hugging Face",
+                'response': "[MODEL NIE DOSTĘPNY] Ustaw GOOGLE_API_KEY dla Gemini API",
                 'success': False,
-                'error': 'Brak dostępnego lokalnego modelu'
+                'error': 'Brak dostępnego modelu'
             }
     
     def is_available(self) -> bool:
-        """Sprawdza czy lokalny model jest dostępny"""
+        """Sprawdza czy model jest dostępny"""
         return self.active_adapter is not None and (
-            (self.ollama and self.ollama.available) or
+            (self.gemini and self.gemini.available) or
             (self.huggingface and self.huggingface.available)
         )
 
@@ -252,11 +258,11 @@ class LocalModelAdapter:
 # ============================================================================
 
 class HybridModelAdapter:
-    """Hybrydowy adapter - preferuje lokalny model, fallback do API"""
+    """Hybrydowy adapter - preferuje Gemini API"""
     
-    def __init__(self, prefer_local: bool = True):
-        self.prefer_local = prefer_local
-        self.local_adapter = LocalModelAdapter() if prefer_local else None
+    def __init__(self, prefer_gemini: bool = True):
+        self.prefer_gemini = prefer_gemini
+        self.gemini_adapter = LocalModelAdapter(preferred_backend="gemini") if prefer_gemini else None
         self.api_adapter = None  # Będzie ustawiony przez GeminiCognitiveAdapter
     
     def set_api_adapter(self, api_adapter):
@@ -264,15 +270,15 @@ class HybridModelAdapter:
         self.api_adapter = api_adapter
     
     def generate(self, prompt: str, **kwargs) -> Dict[str, Any]:
-        """Generowanie - próbuje lokalny, potem API"""
-        # Próbuj lokalny model
-        if self.prefer_local and self.local_adapter and self.local_adapter.is_available():
-            result = self.local_adapter.generate(prompt, **kwargs)
+        """Generowanie - próbuje Gemini, potem fallback"""
+        # Próbuj Gemini
+        if self.prefer_gemini and self.gemini_adapter and self.gemini_adapter.is_available():
+            result = self.gemini_adapter.generate(prompt, **kwargs)
             if result['success']:
-                result['source'] = 'local'
+                result['source'] = 'gemini'
                 return result
         
-        # Fallback do API
+        # Fallback do API adaptera
         if self.api_adapter:
             result = self.api_adapter.cognitive_query(prompt)
             result['source'] = 'api'

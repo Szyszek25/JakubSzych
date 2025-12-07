@@ -1,0 +1,8 @@
+# Minimalne wymagania - tylko podstawowe pakiety do uruchomienia API
+setuptools>=65.0.0
+wheel>=0.38.0
+fastapi>=0.104.1
+uvicorn[standard]>=0.24.0
+pydantic>=2.5.0
+python-multipart>=0.0.6
+

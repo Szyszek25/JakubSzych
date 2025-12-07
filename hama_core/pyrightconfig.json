@@ -1,0 +1,20 @@
+{
+  "include": [
+    "hama_core"
+  ],
+  "exclude": [
+    "**/node_modules",
+    "**/__pycache__"
+  ],
+  "reportMissingImports": "warning",
+  "reportMissingModuleSource": "warning",
+  "reportUndefinedVariable": "error",
+  "reportAttributeAccessIssue": "warning",
+  "reportAssignmentType": "warning",
+  "reportCallIssue": "warning",
+  "reportArgumentType": "warning",
+  "reportIndexIssue": "warning",
+  "pythonVersion": "3.9",
+  "typeCheckingMode": "basic"
+}
+

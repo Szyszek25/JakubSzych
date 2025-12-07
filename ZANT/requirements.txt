@@ -1,0 +1,34 @@
+# ZANT - ZUS Accident Notification Tool
+# Wymagania systemowe
+
+# FastAPI i serwer
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+python-multipart==0.0.6
+pydantic==2.5.0
+
+# HAMA Diamond Core
+# Używa modułów z ../AIWSLUZBIE (local_model_adapter)
+
+# LLM Adapter - Google Gemini
+google-genai==0.2.2
+requests==2.31.0
+
+# PDF Processing
+PyPDF2==3.0.1
+pdfplumber==0.10.3
+pytesseract==0.3.10
+Pillow==10.1.0
+
+# OCR (opcjonalne - alternatywy)
+# paddlepaddle  # Jeśli używasz PaddleOCR
+# easyocr      # Alternatywa dla Tesseract
+
+# Data Processing
+python-dateutil==2.8.2
+python-dotenv==1.0.0
+
+# Utilities
+typing-extensions==4.8.0
+logging==0.4.9.6
+

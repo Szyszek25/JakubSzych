@@ -1,51 +1,30 @@
-# Wirtualne środowisko Python
-venv/
-env/
-ENV/
-.venv/
-
 # Python
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
+venv/
+env/
+ENV/
 
-# Zmienne środowiskowe
-.env
-.env.local
+# Raporty i dane
+reports/
+data/
+*.txt
+*.json
+!requirements.txt
+
+# Notebooks
+*.ipynb
+scenariusze_ipynb
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
-*~
 
-# Systemy operacyjne
+# System
 .DS_Store
 Thumbs.db
-
-# Raporty wygenerowane
-raport_atlantis_*.txt
-*.log
-
-# Cache
-.cache/
-.pytest_cache/
-
