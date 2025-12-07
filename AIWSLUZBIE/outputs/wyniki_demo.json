@@ -1,0 +1,124 @@
+{
+  "timestamp": "2025-12-07T14:11:52.641934",
+  "cases": [
+    {
+      "case_id": "SPR-2024-001",
+      "case_type": "kwalifikacja_zawodowa",
+      "status": "w_trakcie",
+      "parties": [
+        "Jan Kowalski",
+        "Departament Turystyki MSiT"
+      ],
+      "deadline": "2025-12-22T14:11:52.641743",
+      "summary": "Wniosek o nadanie kwalifikacji przewodnika turystycznego",
+      "risk_level": "niski",
+      "compliance_score": 0.95,
+      "legal_issues": [
+        "Weryfikacja dyplomu",
+        "Sprawdzenie doświadczenia"
+      ],
+      "created_at": "2025-12-02T14:11:52.641870",
+      "updated_at": "2025-12-07T14:11:52.641877"
+    },
+    {
+      "case_id": "SPR-2024-002",
+      "case_type": "licencja_turystyczna",
+      "status": "do_weryfikacji",
+      "parties": [
+        "Firma ABC Sp. z o.o.",
+        "MSiT"
+      ],
+      "deadline": "2025-12-14T14:11:52.641881",
+      "summary": "Wniosek o wydanie licencji organizatora turystyki",
+      "risk_level": "średni",
+      "compliance_score": 0.85,
+      "legal_issues": [
+        "Weryfikacja kapitału",
+        "Sprawdzenie ubezpieczenia"
+      ],
+      "created_at": "2025-11-27T14:11:52.641885",
+      "updated_at": "2025-12-07T14:11:52.641889"
+    },
+    {
+      "case_id": "SPR-2024-003",
+      "case_type": "kwalifikacja_zawodowa",
+      "status": "zatwierdzona",
+      "parties": [
+        "Anna Nowak",
+        "MSiT"
+      ],
+      "deadline": "2025-12-05T14:11:52.641892",
+      "summary": "Wniosek o nadanie kwalifikacji pilota wycieczek",
+      "risk_level": "niski",
+      "compliance_score": 0.98,
+      "legal_issues": [],
+      "created_at": "2025-11-17T14:11:52.641897",
+      "updated_at": "2025-12-05T14:11:52.641899"
+    },
+    {
+      "case_id": "SPR-2024-004",
+      "case_type": "licencja_turystyczna",
+      "status": "w_trakcie",
+      "parties": [
+        "XYZ Travel Sp. z o.o.",
+        "MSiT"
+      ],
+      "deadline": "2025-12-10T14:11:52.641904",
+      "summary": "Wniosek o przedłużenie licencji organizatora turystyki",
+      "risk_level": "wysoki",
+      "compliance_score": 0.72,
+      "legal_issues": [
+        "Brak aktualnego ubezpieczenia",
+        "Niekompletna dokumentacja"
+      ],
+      "created_at": "2025-11-29T14:11:52.641906",
+      "updated_at": "2025-12-07T14:11:52.641907"
+    },
+    {
+      "case_id": "SPR-2024-005",
+      "case_type": "kwalifikacja_zawodowa",
+      "status": "odrzucona",
+      "parties": [
+        "Piotr Wiśniewski",
+        "MSiT"
+      ],
+      "deadline": "2025-12-02T14:11:52.641911",
+      "summary": "Wniosek o nadanie kwalifikacji przewodnika górskiego",
+      "risk_level": "średni",
+      "compliance_score": 0.65,
+      "legal_issues": [
+        "Brak wymaganego doświadczenia",
+        "Niekompletna dokumentacja"
+      ],
+      "created_at": "2025-11-07T14:11:52.641912",
+      "updated_at": "2025-12-02T14:11:52.641914"
+    }
+  ],
+  "statistics": {
+    "total_cases": 5,
+    "cases_by_status": {
+      "w_trakcie": 2,
+      "do_weryfikacji": 1,
+      "zatwierdzona": 1,
+      "odrzucona": 1
+    },
+    "cases_by_type": {
+      "kwalifikacja_zawodowa": 3,
+      "licencja_turystyczna": 2
+    },
+    "cases_by_risk": {
+      "niski": 2,
+      "średni": 2,
+      "wysoki": 1,
+      "krytyczny": 0
+    },
+    "avg_compliance_score": 0.8300000000000001,
+    "upcoming_deadlines": 3
+  },
+  "performance_metrics": {
+    "total_cases": 5,
+    "total_analyses": 8,
+    "avg_analysis_time": 2.5,
+    "avg_decision_generation_time": 3.2
+  }
+}
