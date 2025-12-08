@@ -52,3 +52,4 @@ System wykorzystuje metodologię **HAMA Diamond** do:
 - Klasyfikacji scenariuszy (pozytywne/negatywne)
 - Generowania rekomendacji strategicznych
 
+

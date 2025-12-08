@@ -52,3 +52,4 @@ echo ✅ Zakończono!
 echo.
 pause
 
+

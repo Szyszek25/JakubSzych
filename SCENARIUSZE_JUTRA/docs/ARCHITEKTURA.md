@@ -283,3 +283,4 @@ SCENARIUSZE_JUTRA/
 
 System **Scenariusze Jutra** to kompleksowe rozwiązanie do analizy foresightowej, wykorzystujące zaawansowane technologie AI i architekturę GQPA do generowania wiarygodnych scenariuszy rozwojowych dla MSZ.
 
+

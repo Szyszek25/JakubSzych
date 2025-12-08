@@ -99,3 +99,4 @@ Wykorzystuje GQPA Diamond Framework + LLM (Gemini/Ollama/OpenAI)
 
 **Dziękujemy za uwagę!**
 
+

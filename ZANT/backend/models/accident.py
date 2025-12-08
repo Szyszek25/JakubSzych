@@ -115,3 +115,4 @@ class DocumentExtraction:
     processing_time: float
     ocr_used: bool
 
+

@@ -181,3 +181,4 @@ Wartość dla PKO BP: redukcja ryzyka, optymalizacja portfela, automatyzacja ana
 
 **Powodzenia! 🎬**
 
+

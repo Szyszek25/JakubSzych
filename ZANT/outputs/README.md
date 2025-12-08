@@ -38,3 +38,4 @@ Karty wypadków są generowane przez Decision Engine i zawierają:
 
 *Folder jest tworzony automatycznie podczas działania systemu.*
 
+

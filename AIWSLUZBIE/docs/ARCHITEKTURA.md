@@ -286,3 +286,4 @@ AIWSLUZBIE/
 
 System **Asystent AI dla Administracji** to kompleksowe rozwiązanie wykorzystujące zaawansowane technologie AI i architekturę GQPA do wspierania orzeczników w analizie spraw administracyjnych.
 
+

@@ -84,3 +84,4 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8002'
 - `npm run preview` - Podgląd wersji produkcyjnej
 - `npm run lint` - Sprawdź kod (ESLint)
 
+

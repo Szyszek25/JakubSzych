@@ -23,3 +23,4 @@ System wykorzystuje następujące źródła danych:
 - **Embeddings** - Konwersja do wektorów
 - **Indexing** - Indeksowanie w Vector DB
 
+

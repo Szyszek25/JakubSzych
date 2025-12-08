@@ -117,3 +117,4 @@ W produkcji podmień `data_collector.py` aby czytał z prawdziwych źródeł.
 
 **Gotowe! System działa! 🎉**
 
+

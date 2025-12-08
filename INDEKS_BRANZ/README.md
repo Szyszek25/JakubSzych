@@ -173,3 +173,4 @@ Zespół HACKNATION - Hackathon PKO BP 2025
 - Discord: `indeks-branż`
 - Stoisko: PKO BP Hackathon
 
+

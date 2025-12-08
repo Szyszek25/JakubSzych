@@ -63,3 +63,4 @@ Indeks obliczany jako średnia ważona czynników:
 - Pokrycie: 100% spraw
 - Zadowolenie użytkowników: 4.5/5
 
+

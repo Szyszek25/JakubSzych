@@ -107,9 +107,6 @@ except ImportError:
 # Konfiguracja modelu Gemini (domyślny)
 GEMINI_MODEL_NAME = "gemini-2.5-flash"  # Domyślnie używany model Gemini
 
-# Domyślny klucz API dla jury (fallback jeśli nie ustawiono zmiennej środowiskowej)
-DEFAULT_GEMINI_API_KEY = "AIzaSyC3EB_JAX2pTWLJAAiXuiKXTQA8pz4iZzo"
-
 def configure_gemini():
     """Konfiguracja modelu Gemini - obsługuje nowy SDK (google-genai) i stary (google.generativeai)"""
     if not GEMINI_AVAILABLE or genai is None:
@@ -129,10 +126,10 @@ def configure_gemini():
                 except ImportError:
                     pass
             
-            # Fallback do domyślnego klucza dla jury
+            # Sprawdź czy klucz jest ustawiony
             if not api_key:
-                api_key = DEFAULT_GEMINI_API_KEY
-                print("ℹ️ Używam domyślnego klucza API (dla jury)")
+                print("⚠️ Brak klucza API Gemini")
+                print("   Ustaw zmienną środowiskową GOOGLE_API_KEY lub GEMINI_API_KEY")
             
             if api_key:
                 client = genai.Client(api_key=api_key)
@@ -151,10 +148,10 @@ def configure_gemini():
                 except ImportError:
                     pass
             
-            # Fallback do domyślnego klucza dla jury
+            # Sprawdź czy klucz jest ustawiony
             if not api_key:
-                api_key = DEFAULT_GEMINI_API_KEY
-                print("ℹ️ Używam domyślnego klucza API (dla jury)")
+                print("⚠️ Brak klucza API Gemini")
+                print("   Ustaw zmienną środowiskową GOOGLE_API_KEY lub GEMINI_API_KEY")
             
             if api_key:
                 genai.configure(api_key=api_key)

@@ -253,3 +253,4 @@ W wersji produkcyjnej:
 
 **Wszystkie źródła danych są ogólnodostępne i zgodne z wymaganiami hackathonu.**
 
+

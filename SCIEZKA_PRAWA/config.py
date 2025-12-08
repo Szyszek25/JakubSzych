@@ -90,3 +90,4 @@ ACCESSIBILITY_CONFIG = {
     "high_contrast_mode": True
 }
 
+

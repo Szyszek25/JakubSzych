@@ -235,3 +235,4 @@ for pdf_file in os.listdir("data/"):
    - Oceń jakość uzasadnień
    - Zidentyfikuj obszary do poprawy
 
+

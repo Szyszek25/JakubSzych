@@ -8,9 +8,6 @@ import time
 from typing import Dict, Any, Optional
 from datetime import datetime
 
-# Domyślny klucz API dla jury (fallback jeśli nie ustawiono zmiennej środowiskowej)
-DEFAULT_GEMINI_API_KEY = "AIzaSyC3EB_JAX2pTWLJAAiXuiKXTQA8pz4iZzo"
-
 # ============================================================================
 # GEMINI ADAPTER (używa google-genai SDK)
 # ============================================================================
@@ -36,14 +33,14 @@ class GeminiAdapter:
             from google import genai  # type: ignore
             from google.genai import types as genai_types  # type: ignore
             
-            # Pobierz API key - najpierw z parametru, potem ze zmiennej środowiskowej, na końcu domyślny
+            # Pobierz API key - najpierw z parametru, potem ze zmiennej środowiskowej
             if api_key is None:
                 api_key = os.environ.get('GOOGLE_API_KEY') or os.environ.get('GEMINI_API_KEY')
             
-            # Fallback do domyślnego klucza dla jury
+            # Sprawdź czy klucz jest ustawiony
             if not api_key:
-                api_key = DEFAULT_GEMINI_API_KEY
-                print("ℹ️ Używam domyślnego klucza API (dla jury)")
+                print("⚠️ Brak klucza API Gemini")
+                print("   Ustaw zmienną środowiskową GOOGLE_API_KEY lub GEMINI_API_KEY")
             
             if api_key:
                 try:

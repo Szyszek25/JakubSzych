@@ -325,3 +325,4 @@ System **Scenariusze Jutra** wykorzystuje **różnorodne źródła danych** do g
 - **Kompletność** pokrycia
 - **Jakość** przetwarzania
 
+

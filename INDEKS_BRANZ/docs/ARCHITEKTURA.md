@@ -378,3 +378,4 @@ python main.py --full
 
 **Architektura jest modularna, łatwa w utrzymaniu i rozbudowie.**
 
+

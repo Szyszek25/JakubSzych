@@ -133,3 +133,4 @@ System jest gotowy do wdrożenia i może znacząco usprawnić proces obsługi wy
 
 **Total: 8-11 minut** (idealne dla 10-minutowej prezentacji)
 
+

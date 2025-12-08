@@ -230,3 +230,4 @@ System generuje **raporty tekstowe** dla:
 
 *GQPA-Indeks Branż - System analizy kondycji branż w Polsce*
 
+

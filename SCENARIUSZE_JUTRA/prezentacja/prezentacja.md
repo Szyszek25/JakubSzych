@@ -276,3 +276,4 @@ GQPA_Index = (
 
 **Dziękujemy za uwagę!**
 
+

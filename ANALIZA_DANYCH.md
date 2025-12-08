@@ -174,3 +174,4 @@ Po analizie kodu i wykresów, oto status danych w projektach:
 
 **Wniosek**: Wykresy są **częściowo na prawdziwych danych** (struktura, scenariusze), ale **wartości liczbowe są często symulowane**.
 
+

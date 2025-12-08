@@ -200,3 +200,4 @@ Raporty są generowane w **naturalnym języku polskim** z użyciem szablonów i 
 
 **Dokumentacja metodologii jest kluczowa dla wdrożenia systemu w PKO BP.**
 
+

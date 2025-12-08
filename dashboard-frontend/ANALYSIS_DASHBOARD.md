@@ -114,3 +114,4 @@ Jury powinno pomyśleć:
 A nie:
 > "Ładna stronka."
 
+

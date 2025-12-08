@@ -276,3 +276,4 @@ Metodologia **Scenariusze Jutra** łączy:
 
 W rezultacie otrzymujemy wiarygodne, aktualne i użyteczne scenariusze rozwojowe dla MSZ.
 
+
